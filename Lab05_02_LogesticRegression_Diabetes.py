@@ -11,7 +11,7 @@ import numpy as np
 #%% Data load 
 xy = np.loadtxt('data-03-diabetes.csv',delimiter=',',dtype=np.float32)
 x_data = xy[:,0:-1]
-y_data = xy[:,-1]
+y_data = xy[:,[-1]]
 #%% Buling Graph
 X = tf.placeholder(dtype=tf.float32, shape=[None, 8])
 Y = tf.placeholder(dtype=tf.float32, shape=[None, 1])
@@ -29,18 +29,17 @@ train = tf.train.GradientDescentOptimizer(learning_rate = 0.01).minimize(cost)
 predicted = tf.cast(hypothesis > 0.5 , dtype=tf.float32)
 accuracy = tf.reduce_mean(tf.cast(tf.equal(predicted, Y), dtype= tf.float32))
 #%% Launch graph
-with tf.Session as sess:
+with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     
     feed = {X:x_data, Y:y_data}
-    for step in range(10001):
+    for step in range(20001):
         sess.run(train, feed_dict = feed)
         if step % 200 == 0:
-            print(step, sess.run(cost, feed_dict=feed)
+            print(step, sess.run(cost, feed_dict=feed))
 
-#%%
-h, c, a = sess.run([hypothesis, predicted, accuracy], feed_dict = feed)
-print("Hypotehsis:", h)
-print("Corrected:", c)
-print("Accuracy:", a)
+    h, c, a = sess.run([hypothesis, predicted, accuracy], feed_dict = feed)
+    print("Hypotehsis:", h)
+    print("Corrected:", c)
+    print("Accuracy:", a)
 
