@@ -67,7 +67,8 @@ cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=hypothesis,
 optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)
 
 #%%
-sess = tf.Session()
+#sess = tf.Session()
+sess = tf.Session(config=tf.ConfigProto(log_device_placement=True))
 sess.run(tf.global_variables_initializer())
 #
 print("Learning started. It takes sometime.")

@@ -16,10 +16,11 @@ idex2char = ['h', 'i', 'e', 'l', 'o']
 x_data = [[[0,1,0,2,3,3]]]     # hihell
 x_one_hot = [[[1,0,0,0,0],
               [0,1,0,0,0],
+              [1,0,0,0,0],
               [0,0,1,0,0],
               [0,0,0,1,0],
-              [0,0,0,0,1],
-              [0,0,0,0,1]]]
+              [0,0,0,1,0]]]
+x_data2 = [[0,1,0,2,3,3]]
 
 y_data = [[1,0,2,3,3,4]]    # ihello
 
@@ -53,16 +54,19 @@ train = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(loss)
 prediction = tf.argmax(outputs, axis=2)
 
 #%%
-with tf.Session() as sess:
-    sess.run(tf.global_variables_initializer())
-    for i in range(50):
-        l, _ = sess.run([loss, train], feed_dict={X:x_one_hot, Y:y_data})
-        result = sess.run(prediction, feed_dict={X: x_one_hot})
-        print(i, "loss", l, "prediction:", result, "True Y:", y_data )
-        #
-        result_str = [idex2char[c] for c in    ]
-        print("\tPrediction str: ", "".join(result_str))
+sess= tf.Session()
+sess.run(tf.global_variables_initializer())
+for i in range(50):
+    l, _ = sess.run([loss, train], feed_dict={X:x_one_hot, Y:y_data})
+    result = sess.run(prediction, feed_dict={X: x_one_hot})
+    print(i, "loss", l, "prediction:", result, "True Y:", y_data )
+    #
+    result_str = [idex2char[c] for c in np.squeeze(result)]
+    print("\tPrediction str: ", "".join(result_str))
 
         
 
 
+#%%
+#sequence_loss2 = tf.contrib.seq2seq.sequence_loss(logits=X, targets=Y, weights = weights)
+#sess.run(sequence_loss, feed_dict={X:x_one_hot, Y:y_data})
